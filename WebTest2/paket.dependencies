@@ -3,3 +3,6 @@ framework >= net45
 
 nuget FAKE
 nuget Suave 1.0
+nuget MongoDB.Driver
+nuget MongoDB.FSharp
+nuget Newtonsoft.Json

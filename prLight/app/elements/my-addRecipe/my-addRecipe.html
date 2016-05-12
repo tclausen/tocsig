@@ -1,0 +1,85 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
+
+<dom-module id="my-addRecipe">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      span,
+      input {
+        @apply(--paper-font-body2);
+      }
+    </style>
+    <form is="iron-form" content-type="application/json" id="form2" method="post" action="http://tocsig.ddns.net:8083/recipes" on-iron-form-response="formResponse">
+      <paper-input name="title" label="Title" maxlength="50" size="10" value="{{recipe.title}}"></paper-input>
+      <paper-dropdown-menu label="Type" name="category">
+        <paper-listbox class="dropdown-content">
+          <paper-item>Forret</paper-item>
+          <paper-item>Hovedret</paper-item>
+          <paper-item>Dessert</paper-item>
+          <paper-item>Tilbehør</paper-item>
+          <paper-item>Kage</paper-item>
+        </paper-listbox>
+      </paper-dropdown-menu>
+      <paper-input name="source" label="Source" maxlength="50" value="{{recipe.source}}"></paper-input>
+      <paper-input name="addedBy" label="Tilføjet af" maxlength="50" value="{{recipe.addedBy}}"></paper-input>
+      <paper-textarea name="ingredients" label="Ingredienser" value="{{recipe.ingreients}}"></paper-textarea>
+      <paper-textarea name="process" label="Sådan gør du" value="{{recipe.process}}"></paper-textarea>
+      <br>
+      <paper-button raisedButton onclick="submitForm()" label="Tilføj">Tilføj</paper-button>
+      <br>
+      <p><div id="myResponse"></div></p>
+    </iron-form>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'my-addRecipe',
+        properties: {
+           recipe: {
+             value: { title: "", process: "", ingredients: "" }
+          },
+        },
+        ready: function() {
+          this.$.form2.addEventListener('iron-form-error',this.formError);
+        },
+        formResponse: function (e){
+          var element = document.getElementById("myResponse");
+          element.innerHTML = "<font color='green'>Opskrift '"+this.recipe.title+"' er tilføjet</font>";
+          console.log("Server Response: ",e.detail);
+          this.recipe.title = "";
+          var x3 = document.querySelectorAll("my-recipeList")[0];
+          x3.items = JSON.parse(Get(":8083/recipes"));
+          setTimeout(function() { element.innerHTML = ""}, 3000);
+        },
+        formError: function (e){
+          document.getElementById("myResponse").innerHTML = "<font color='red'>Fejl under opdatering :-(</font>";
+          console.log("Form Error: ",e.detail);
+        }
+      });
+    })();
+    function submitForm() {
+      document.getElementById('form2').submit();
+    };
+    function Get(yourUrl){
+      var Httpreq = new XMLHttpRequest(); // a new request
+      var host = "http://"+window.location.hostname;
+      Httpreq.open("GET",host+yourUrl,false);
+      Httpreq.send(null);
+      return Httpreq.responseText;          
+    };
+  </script>
+</dom-module>

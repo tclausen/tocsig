@@ -1,0 +1,49 @@
+﻿open SuaveRestApi.Db
+open SuaveRestApi.DbRecipe
+open SuaveRestApi.Rest
+open Suave
+open System.Net
+
+let testStorage fileName =
+  DbRecipe.myInit
+//  let newRecipe = {
+//    MyId = 3
+//    Title = "Sovs 2"
+//    Process = "hej"
+//    Ingredients = "hej2"
+//    Source = "mig"
+//  }
+//  DbRecipe.createRecipe newRecipe |> ignore
+//  let newRecipe2 = {
+//    MyId = 3
+//    Title = "Gulerodskage"
+//    Process = "Bland"
+//    Ingredients = "Sukker"
+//    Source = "Gammel kending"
+//  }
+//  DbRecipe.createRecipe newRecipe2 |> ignore
+  printfn "%s" (DbRecipe.getRecipes() |> DbRecipe.toJson)
+  ()
+
+[<EntryPoint>]
+let main argv =
+
+  let config = 
+    { defaultConfig with
+        bindings =
+          [ HttpBinding.mk HTTP (IPAddress.Parse "192.168.1.70") 8083us ]
+    }
+
+  let recipeWebPart = rest "recipes" {
+    GetAll = DbRecipe.getRecipes
+    GetById = DbRecipe.getRecipe
+    Create = DbRecipe.createRecipe
+    Update = DbRecipe.updateRecipe
+    Delete = DbRecipe.deleteRecipe
+    UpdateById = DbRecipe.updateRecipeById
+    IsExists = DbRecipe.isRecipeExists
+  }
+
+  //testStorage "hej"
+  startWebServer config recipeWebPart
+  0

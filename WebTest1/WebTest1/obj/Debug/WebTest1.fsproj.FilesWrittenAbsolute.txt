@@ -1,0 +1,2 @@
+/home/toc/src/tocsig/WebTest1/WebTest1/obj/Debug/.NETFramework,Version=v4.5.2.AssemblyAttribute.fs
+/home/toc/src/tocsig/WebTest1/WebTest1/bin/Debug/FSharp.Core.dll

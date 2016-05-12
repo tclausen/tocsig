@@ -1,0 +1,9 @@
+/home/toc/src/tocsig/WebDataStore/WebDataStore/obj/Debug/.NETFramework,Version=v4.5.2.AssemblyAttribute.fs
+/home/toc/src/tocsig/WebDataStore/WebDataStore/bin/Debug/WebDataStore.exe.config
+/home/toc/src/tocsig/WebDataStore/WebDataStore/bin/Debug/WebDataStore.exe.mdb
+/home/toc/src/tocsig/WebDataStore/WebDataStore/bin/Debug/WebDataStore.exe
+/home/toc/src/tocsig/WebDataStore/WebDataStore/obj/Debug/WebDataStore.exe
+/home/toc/src/tocsig/WebDataStore/WebDataStore/obj/Debug/WebDataStore.exe.mdb
+/home/toc/src/tocsig/WebDataStore/WebDataStore/bin/Debug/FSharp.Core.dll
+/home/toc/src/tocsig/WebDataStore/WebDataStore/bin/Debug/Newtonsoft.Json.dll
+/home/toc/src/tocsig/WebDataStore/WebDataStore/bin/Debug/Suave.dll

@@ -1,0 +1,100 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="my-recipe">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      span,
+      input {
+        @apply(--paper-font-body2);
+      }
+    </style>
+
+    <h1 class="page-title" tabindex="-1" style='margin-bottom: 2px;'>
+      {{recipe.title}}
+      <paper-icon-button icon="delete" on-tap="deleteRecipe"></paper-icon-button>
+      <paper-icon-button icon="create" on-tap="editRecipe"></paper-icon-button>
+    </h1>
+    <font size=2 color="grey">Oprettet {{recipe.created}}</font>
+    <template is="dom-if" if="{{recipe.source}}">
+      <p>Kilde: {{recipe.source}}</p>
+    </template>
+    <h1>Ingredienser</h1>
+    <template is="dom-repeat" items="{{recipe.ingredients}}">
+      {{item}}<br>
+    </template>
+    <h1>Fremgangsmåde</h1>
+    <template is="dom-repeat" items="{{recipe.process}}">
+      {{displayIndex(index)}}: {{item}}<br>
+    </template>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'my-recipe',
+        properties: {
+          id: {
+            type: String,
+            value: '-1',
+            observer: "_idChanged"
+          },
+          recipeListUpdated: {
+            type: String,
+            value: "not set",
+            notify: true
+          },
+          recipe: {
+            id: String,
+          }
+        },
+        _idChanged: function(newValue, oldValue) {
+           if(newValue == -1) {
+             this.recipe = null;
+             return;
+           }
+           var json_obj = JSON.parse(Get(":8083/recipes/" + newValue));
+           if(json_obj.ingredients != null)
+             json_obj.ingredients = json_obj.ingredients.split(";");
+           if(json_obj.process != null)
+             json_obj.process = json_obj.process.split(";");
+           this.recipe = json_obj;
+        },
+        displayIndex: function(index) {
+          return index + 1;
+        },
+        deleteRecipe: function(){
+          var host = "http://"+window.location.hostname;
+          var Httpreq = new XMLHttpRequest(); 
+          Httpreq.open("DELETE",host + ":8083/recipes/"+this.recipe.myId,false);
+          Httpreq.send(null);
+          this.id = -1;
+          var x3 = document.querySelectorAll("my-recipeList")[0];
+          x3.items = JSON.parse(Get(":8083/recipes"));
+          var x1 = document.querySelectorAll("iron-pages");
+          x1[0].selected = "recipes";
+        },
+          editRecipe: function(){
+          var x3 = document.querySelectorAll("my-addRecipe")[0];
+          var x1 = document.querySelectorAll("iron-pages");
+          x1[0].selected = "addRecipe";
+        }
+      });
+    })();
+    function Get(yourUrl){
+      var Httpreq = new XMLHttpRequest(); // a new request
+      var host = "http://"+window.location.hostname;
+      Httpreq.open("GET",host+yourUrl,false);
+      Httpreq.send(null);
+      return Httpreq.responseText;          
+    };
+  </script>
+</dom-module>

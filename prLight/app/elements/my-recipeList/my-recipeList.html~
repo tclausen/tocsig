@@ -1,0 +1,70 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
+
+<dom-module id="my-addRecipe">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      span,
+      input {
+        @apply(--paper-font-body2);
+      }
+    </style>
+    <form is="iron-form" content-type="application/json" id="form2" method="post" action="http://mars:8083/recipes" on-iron-form-response="formResponse">
+      <paper-input name="title" label="Title" maxlength="50" size="10"></paper-input>
+      <paper-input name="source" label="Source" maxlength="50"></paper-input>
+      <paper-input name="addedBy" label="Tilføjet af" maxlength="50"></paper-input>
+      <paper-textarea name="ingredients" label="Ingredienser"></paper-textarea>
+      <paper-textarea name="process" label="Sådan gør du"></paper-textarea>
+      <br>
+      <paper-button raisedButton onclick="submitForm()" label="Tilføj">Tilføj</paper-button>
+      <br>
+      <p><div id="myResponse"></div></p>
+    </iron-form>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'my-addRecipe',
+        properties: {
+          id: {
+            type: String,
+            value: 'Gulerodskage'
+          },
+          recipe: {
+            id: String,
+            source: String,
+            ingredients: String,
+            process: String,
+            ingArray: []
+          },
+        },
+        ready: function() {
+          this.$.form2.addEventListener('iron-form-error',this.formError);
+        },
+        formResponse: function (e){
+          document.getElementById("myResponse").innerHTML = "<font color='green'>Opskrift er tilføjet</font>";
+          console.log("Server Response: ",e.detail);
+        },
+        formError: function (e){
+          document.getElementById("myResponse").innerHTML = "<font color='red'>Fejl under opdatering :-(</font>";
+          console.log("Form Error: ",e.detail);
+        }
+      });
+    })();
+    function submitForm() {
+      document.getElementById('form2').submit();
+    }
+  </script>
+</dom-module>

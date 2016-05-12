@@ -1,0 +1,48 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="my-recipeList">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      span,
+      input {
+        @apply(--paper-font-body2);
+      }
+    </style>
+    <template is="dom-repeat" items="{{items}}">
+      <a href$="{{baseUrl}}recipes/{{item.myId}}">{{item.title}}</a>
+      <br>
+    </template>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'my-recipeList',
+        properties: {
+          items: {
+            type: []
+          },
+        },
+        ready: function(){
+          this.items = JSON.parse(Get(":8083/recipes"));
+        }
+      });
+    })();
+    function Get(yourUrl){
+      var Httpreq = new XMLHttpRequest(); // a new request
+      var host = "http://"+window.location.hostname;
+      Httpreq.open("GET",host+yourUrl,false);
+      Httpreq.send(null);
+      return Httpreq.responseText;          
+    }
+  </script>
+</dom-module>

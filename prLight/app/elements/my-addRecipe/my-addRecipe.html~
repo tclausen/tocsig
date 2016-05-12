@@ -1,0 +1,66 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="my-recipe">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      span,
+      input {
+        @apply(--paper-font-body2);
+      }
+    </style>
+
+    <h1 class="page-title" tabindex="-1">{{id}}</h1>
+    <p>Kilde: {{recipe.source}}</p>
+    <h1>Ingredienser</h1>
+    <template is="dom-repeat" items="{{recipe.ingredients}}">
+      {{item}}<br>
+    </template>
+    <h1>Fremgangsmåde</h1>
+    <template is="dom-repeat" items="{{recipe.process}}">
+      {{displayIndex(index)}}: {{item}}<br>
+    </template>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'my-recipe',
+        properties: {
+          id: {
+            type: String,
+            value: 'Gulerodskage'
+          },
+          recipe: {
+            id: String,
+            source: String,
+            ingredients: String,
+            process: String,
+            ingArray: []
+          }
+        },
+        ready: function(e){
+           function Get(yourUrl){
+             var Httpreq = new XMLHttpRequest(); // a new request
+             Httpreq.open("GET",yourUrl,false);
+             Httpreq.send(null);
+             return Httpreq.responseText;          
+           }
+           var json_obj = JSON.parse(Get("/dataVafler.json"));
+           json_obj.ingredients = json_obj.ingredients.split(";");
+           json_obj.process = json_obj.process.split(";");
+           this.recipe = json_obj;
+        },
+        displayIndex: function(index) {
+                       return index + 1;
+                      }
+      });
+    })();
+  </script>
+</dom-module>

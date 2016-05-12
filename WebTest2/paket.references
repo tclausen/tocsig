@@ -1,1 +1,4 @@
 Suave
+Newtonsoft.Json
+MongoDB.Driver
+MongoDB.FSharp
